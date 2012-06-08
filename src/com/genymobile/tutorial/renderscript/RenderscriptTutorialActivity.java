@@ -2,9 +2,12 @@
 package com.genymobile.tutorial.renderscript;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -79,6 +82,18 @@ public class RenderscriptTutorialActivity extends Activity {
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap b = BitmapFactory.decodeResource(getResources(), resource, options);
         return b;
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add("Render View");
+        return true;
+    }
+    
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        startActivity(new Intent(this, RenderScriptViewActivity.class));
+        return super.onMenuItemSelected(featureId, item);
     }
 
 }
