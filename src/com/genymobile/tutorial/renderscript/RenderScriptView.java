@@ -9,12 +9,11 @@ import android.renderscript.Allocation;
 import android.renderscript.ProgramFragmentFixedFunction;
 import android.renderscript.ProgramRaster;
 import android.renderscript.ProgramStore;
-import android.renderscript.ProgramVertexFixedFunction;
 import android.renderscript.RSTextureView;
 import android.renderscript.RenderScriptGL;
 import android.util.AttributeSet;
 
-public class RenderscriptView extends RSTextureView {
+public class RenderScriptView extends RSTextureView {
 
     // Attributs du scripts
     private RenderScriptGL mRs;
@@ -22,18 +21,18 @@ public class RenderscriptView extends RSTextureView {
 
     private Allocation mTexture;
 
-    public RenderscriptView(Context context) {
+    public RenderScriptView(Context context) {
         super(context);
     }
-    
-    public RenderscriptView(Context context, AttributeSet set) {
+
+    public RenderScriptView(Context context, AttributeSet set) {
         super(context, set);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        
+
         // Chargement du script
         RenderScriptGL.SurfaceConfig sc = new RenderScriptGL.SurfaceConfig();
         mRs = createRenderScriptGL(sc);
@@ -41,9 +40,8 @@ public class RenderscriptView extends RSTextureView {
 
         // Récupération de l'image
         loadBitmap(getResources(), R.drawable.logo);
-        
+
         // Initialisation des différents objets nécessaire au rendu 3D
-        initProgramVertex();
         initProgramFragment();
         initProgramRaster();
         initProgramStore();
@@ -51,11 +49,10 @@ public class RenderscriptView extends RSTextureView {
         mScript.set_debug(true);
         mRs.bindRootScript(mScript);
     }
-    
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        
         if (mRs != null) {
             mRs.destroy();
             mRs = null;
@@ -70,7 +67,7 @@ public class RenderscriptView extends RSTextureView {
         mTexture = Allocation.createFromBitmap(mRs, b,
                 Allocation.MipmapControl.MIPMAP_ON_SYNC_TO_TEXTURE,
                 Allocation.USAGE_GRAPHICS_TEXTURE);
-        
+
         // Configuration du script
         mScript.set_height(b.getHeight());
         mScript.set_width(b.getWidth());
@@ -79,25 +76,21 @@ public class RenderscriptView extends RSTextureView {
 
     private void initProgramFragment() {
         // Gestion par defaut des couleurs des pixels
-        ProgramFragmentFixedFunction.Builder pgBuilder = new ProgramFragmentFixedFunction.Builder(mRs);
+        ProgramFragmentFixedFunction.Builder pgBuilder = new ProgramFragmentFixedFunction.Builder(
+                mRs);
         // Force l'utilisation de la transparence (alpha)
         pgBuilder.setTexture(ProgramFragmentFixedFunction.Builder.EnvMode.REPLACE,
                 ProgramFragmentFixedFunction.Builder.Format.RGBA, 0);
         mScript.set_programFragment(pgBuilder.create());
     }
 
-    private void initProgramVertex() {
-        // Gestion par defaut des vertices
-        mRs.bindProgramVertex(new ProgramVertexFixedFunction.Builder(mRs).create());
-    }
-    
-    private void initProgramStore() {
-        // Gestion par defaut de la transparence
-        mScript.set_programStore(ProgramStore.BLEND_ALPHA_DEPTH_NONE(mRs));
-    }
-
     private void initProgramRaster() {
         // Pas de Culling (la texture s'affiche des deux cotés)
         mScript.set_programRaster(ProgramRaster.CULL_NONE(mRs));
+    }
+
+    private void initProgramStore() {
+        // Gestion par defaut de la transparence
+        mScript.set_programStore(ProgramStore.BLEND_ALPHA_DEPTH_NONE(mRs));
     }
 }

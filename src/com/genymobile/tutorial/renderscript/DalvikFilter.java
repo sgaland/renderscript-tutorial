@@ -3,7 +3,7 @@ package com.genymobile.tutorial.renderscript;
 
 import android.graphics.Bitmap;
 
-public class DalvikFilter extends GenericFilter {
+public class DalvikFilter extends AbstractFilter {
 
     @Override
     public void applyFilter(Bitmap inputBitmap, Bitmap outputBitmap) {
@@ -32,10 +32,10 @@ public class DalvikFilter extends GenericFilter {
             float tg = r * mMatrix[1] + g * mMatrix[4] + b * mMatrix[7];
             float tb = r * mMatrix[2] + g * mMatrix[5] + b * mMatrix[8];
 
-            // Normalisation du résultat entre 0 et 255 
-            r = tr > 255 ? 255 : tr < 0 ? 0 : (int)tr;
-            g = tg > 255 ? 255 : tg < 0 ? 0 : (int)tg;
-            b = tb > 255 ? 255 : tb < 0 ? 0 : (int)tb;
+            // Normalisation du résultat entre 0 et 255
+            r = tr > 255 ? 255 : tr < 0 ? 0 : (int) tr;
+            g = tg > 255 ? 255 : tg < 0 ? 0 : (int) tg;
+            b = tb > 255 ? 255 : tb < 0 ? 0 : (int) tb;
 
             // Récupération de la valeur finale
             mOutputPixels[i] = a << 24 | r << 16 | g << 8 | b;
@@ -47,7 +47,7 @@ public class DalvikFilter extends GenericFilter {
                 0, outputBitmap.getWidth(),
                 0, 0,
                 outputBitmap.getWidth(), outputBitmap.getHeight());
-        
+
         mInputPixels = null;
         mOutputPixels = null;
     }

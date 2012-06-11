@@ -40,7 +40,7 @@ void printFPS(){
 
 int root() {
 
-	// Clear background
+	// Nettoyage de l’écran avec une couleur unie (ici blanc)
 	rsgClearColor(1.0f, 1.0f, 1.0f, 0.0f);  
 
 	float startX = -width/2, startY = - height/2;

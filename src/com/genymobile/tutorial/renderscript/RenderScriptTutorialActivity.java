@@ -12,22 +12,22 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class RenderscriptTutorialActivity extends Activity {
+public class RenderScriptTutorialActivity extends Activity {
 
     private float[] sepiaMatrix = {
             0.3588f, 0.2990f, 0.2392f,
             0.7044f, 0.5870f, 0.4696f,
             0.1368f, 0.1140f, 0.0912f
     };
-    
-    private Bitmap mInBitmap; 
+
+    private Bitmap mInBitmap;
     private Bitmap mOutBitmap;
-    
+
     private DalvikFilter dalvikFilter;
     private RenderScriptFilter renderFilter;
 
-    private  ImageView outImageView;
-    
+    private ImageView outImageView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,26 +36,26 @@ public class RenderscriptTutorialActivity extends Activity {
         mInBitmap = loadBitmap(R.raw.lena_std);
 
         outImageView = (ImageView) findViewById(R.id.out);
-        
+
         mOutBitmap = Bitmap.createBitmap(
                 mInBitmap.getWidth(),
                 mInBitmap.getHeight(),
                 mInBitmap.getConfig());
 
         outImageView.setImageBitmap(mOutBitmap);
-        
+
         dalvikFilter = new DalvikFilter();
         dalvikFilter.setMatrix(sepiaMatrix);
-        
+
         renderFilter = new RenderScriptFilter(this);
         renderFilter.setMatrix(sepiaMatrix);
     }
-    
+
     public void executeDalvikFiltering(View v) {
         computeDalvikFiltering(mInBitmap, mOutBitmap);
         outImageView.invalidate();
     }
-    
+
     public void executeRenderScriptFiltering(View v) {
         computeRenderScriptFiltering(mInBitmap, mOutBitmap);
         outImageView.invalidate();
@@ -63,17 +63,24 @@ public class RenderscriptTutorialActivity extends Activity {
 
     private void computeDalvikFiltering(Bitmap inputBitmap, Bitmap outputBitmap) {
         long t = System.currentTimeMillis();
-        dalvikFilter.applyFilter(inputBitmap, outputBitmap);
+        for (int i = 0; i < 50; i++)
+        {
+            dalvikFilter.applyFilter(inputBitmap, outputBitmap);
+        }
+
         Toast.makeText(this,
-                "Dalvik running time: " + (System.currentTimeMillis() - t) + " ms",
+                "Dalvik running time: " + (System.currentTimeMillis() - t) / 50 + " ms",
                 Toast.LENGTH_SHORT).show();
     }
 
-    private void computeRenderScriptFiltering(Bitmap bitmap, Bitmap outputBitmap) {
+    private void computeRenderScriptFiltering(Bitmap inputBitmap, Bitmap outputBitmap) {
         long t = System.currentTimeMillis();
-        renderFilter.applyFilter(bitmap, outputBitmap);
+        for (int i = 0; i < 50; i++)
+        {
+            renderFilter.applyFilter(inputBitmap, outputBitmap);
+        }
         Toast.makeText(this,
-                "Renderscript running time: " + (System.currentTimeMillis() - t) + " ms",
+                "Renderscript running time: " + (System.currentTimeMillis() - t) / 50 + " ms",
                 Toast.LENGTH_SHORT).show();
     }
 
@@ -83,13 +90,13 @@ public class RenderscriptTutorialActivity extends Activity {
         Bitmap b = BitmapFactory.decodeResource(getResources(), resource, options);
         return b;
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add("Render View");
         return true;
     }
-    
+
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         startActivity(new Intent(this, RenderScriptViewActivity.class));

@@ -3,7 +3,7 @@ package com.genymobile.tutorial.renderscript;
 
 import android.graphics.Bitmap;
 
-public abstract class GenericFilter {
+public abstract class AbstractFilter {
 
     // Matrice du filtre a appliquer (initialisée en matrice identité)
     protected float[] mMatrix = {

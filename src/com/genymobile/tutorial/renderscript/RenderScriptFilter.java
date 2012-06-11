@@ -7,7 +7,7 @@ import android.renderscript.Allocation;
 import android.renderscript.Matrix3f;
 import android.renderscript.RenderScript;
 
-public class RenderScriptFilter extends GenericFilter {
+public class RenderScriptFilter extends AbstractFilter {
 
     private Context mContext;
 
@@ -19,15 +19,15 @@ public class RenderScriptFilter extends GenericFilter {
 
     public RenderScriptFilter(Context context) {
         mContext = context;
+
+        // Création du script
+        mRS = RenderScript.create(mContext);
+        mScript = new ScriptC_filter(mRS, mContext.getResources(), R.raw.filter);
     }
 
     @Override
     public void applyFilter(Bitmap inputBitmap, Bitmap outpuBitmap) {
-        
-        // Création du script 
-        mRS = RenderScript.create(mContext);
-        mScript = new ScriptC_filter(mRS, mContext.getResources(), R.raw.filter);
-        
+
         // Allocation de la mémoire content le bitmap
         mInAllocation = Allocation.createFromBitmap(
                 mRS,
@@ -40,13 +40,19 @@ public class RenderScriptFilter extends GenericFilter {
 
         // Mise en place des paramètres
         Matrix3f sepiaMatrix = new Matrix3f(mMatrix);
-        mScript.set_matrix(sepiaMatrix);
-        
+        mScript.set_filter(sepiaMatrix);
+
         // Appel du script (rsForEach)
         mScript.forEach_root(mInAllocation, mOutAllocation);
 
         // Copie du résultat dans le bitmap de sortie
         mOutAllocation.copyTo(outpuBitmap);
+
+        // Cleaning allocations
+        mInAllocation.destroy();
+        mInAllocation = null;
+        mOutAllocation.destroy();
+        mOutAllocation = null;
     }
 
 }
