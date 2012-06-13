@@ -30,7 +30,7 @@ void init() {
 
 // Point d'entrée principal du script effectuant l'opération sur un pixel
 void root(const uchar4 *in, uchar4 *out) {
-    float3 pixel = convert_float4(in[0]).rgb; // Récupération des couleurs
+    float3 pixel = convert_float4(*in).rgb; // Récupération des couleurs
     pixel = rsMatrixMultiply(&filter, pixel); // Application du filtre
     pixel = clamp(pixel, 0.f, 255.f); // Normalisation des valeurs (0..255)
     out->a = in->a; // Récupération de la valeur alpha

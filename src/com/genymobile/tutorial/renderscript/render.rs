@@ -25,7 +25,7 @@ rs_program_store programStore;
 
 rs_allocation texture;
 
-// Parameters 
+// Paramètres 
 bool debug;
 int width;
 int height;

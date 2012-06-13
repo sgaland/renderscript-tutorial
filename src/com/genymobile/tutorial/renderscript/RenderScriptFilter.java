@@ -41,7 +41,7 @@ public class RenderScriptFilter extends AbstractFilter {
     }
 
     @Override
-    public void applyFilter(Bitmap inputBitmap, Bitmap outpuBitmap) {
+    public void applyFilter(Bitmap inputBitmap, Bitmap outputBitmap) {
 
         // Allocation de la mémoire content le bitmap
         mInAllocation = Allocation.createFromBitmap(
@@ -61,7 +61,7 @@ public class RenderScriptFilter extends AbstractFilter {
         mScript.forEach_root(mInAllocation, mOutAllocation);
 
         // Copie du résultat dans le bitmap de sortie
-        mOutAllocation.copyTo(outpuBitmap);
+        mOutAllocation.copyTo(outputBitmap);
 
         // Cleaning allocations
         mInAllocation.destroy();

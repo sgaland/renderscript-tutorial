@@ -56,12 +56,14 @@ public class RenderScriptView extends RSTextureView {
         // Récupération de l'image
         loadBitmap(getResources(), R.drawable.logo);
 
-        // Initialisation des différents objets nécessaire au rendu 3D
+        // Initialisation des différents objets nécessaires au rendu 3D
         initProgramFragment();
         initProgramRaster();
         initProgramStore();
 
         mScript.set_debug(true);
+        
+        // Association du script au contexte RenderScriptGL
         mRs.bindRootScript(mScript);
     }
 
@@ -69,8 +71,8 @@ public class RenderScriptView extends RSTextureView {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (mRs != null) {
-            mRs.destroy();
             mRs = null;
+            destroyRenderScriptGL();
         }
     }
 
